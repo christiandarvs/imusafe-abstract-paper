@@ -1,0 +1,91 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{times}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{multicol}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{titlesec} 
+
+% Force sections to be exactly 12pt (\normalsize), bold, and uppercase
+\titleformat{\section}{\normalfont\normalsize\bfseries\uppercase}{}{0pt}{}
+% Drastically reduce the space before and after the section headings
+\titlespacing*{\section}{0pt}{0.5em}{0.2em}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setstretch{1.0}
+
+\begin{document}
+
+% ================= TITLE =================
+\begin{center}
+{\fontsize{16}{20}\bfseries
+EVALUATING THE EFFECTIVENESS OF YOLOV11-BASED\\
+VEHICULAR ACCIDENT DETECTION IN THE IMUSAFE\\
+MOBILE APP: A QUANTITATIVE STUDY IN IMUS, CAVITE\par
+}
+\end{center}
+
+\vspace{-1.5em} 
+
+% ================= AUTHORS =================
+\begin{center}
+{\fontsize{10.5}{12}\selectfont 
+% Using a single tabular keeps every line perfectly aligned horizontally row-by-row
+\begin{tabular}{>{\centering\arraybackslash}p{0.31\textwidth}
+                >{\centering\arraybackslash}p{0.31\textwidth}
+                >{\centering\arraybackslash}p{0.31\textwidth}}
+
+{\normalsize Christian Elijah DC. Darvin} & {\normalsize Yuri Anton S. Cariscal} & {\normalsize Xian Angel B. Palomares} \\
+College of Information and & College of Information and & College of Information and \\
+Computer Studies & Computer Studies & Computer Studies \\
+De La Salle University - & De La Salle University - & De La Salle University - \\
+Dasmariñas & Dasmariñas & Dasmariñas \\
+Dasmariñas, Cavite, Philippines & Dasmariñas, Cavite, Philippines & Dasmarinas, Cavite, Philippines \\
+dcd0655@dlsud.edu.ph & cys0775@dlsud.edu.ph & pxb0696@edu.ph \\
+
+\end{tabular}
+
+\vspace{1.5em}
+
+{\normalsize Prof. Rolando B. Barrameda}\\
+College of Information and Computer Studies\\
+De La Salle University - Dasmariñas\\
+Dasmarinas, Cavite, Philippines\\
+rbbarrameda@edu.ph
+\par}
+\end{center}
+
+% ================= BODY =================
+% Increase the space between the two columns
+\setlength{\columnsep}{0.25in} 
+
+\begin{multicols}{2}
+
+\section*{BACKGROUND}
+According to the World Health Organization (2023), approximately 1.19 million people die each year due to road traffic crashes, making it a leading cause of mortality globally. On a local scale, Imus, Cavite has recorded an increasing trend of 2,462 incidents driven by rapid urbanization. Current traffic management relies heavily on manual human perception, resulting in delayed emergency responses and a lack of real-time feedback. To address these manual inefficiencies, leveraging real-time computer vision architectures such YOLO presents a scalable solution for automated incident detection.
+
+\vspace{1em} 
+
+\section*{OBJECTIVES}
+This study aimed to develop ImuSafe, a mobile application designed to reduce emergency response times by automating the vehicular accident reporting process for victims and bystanders. The specific objectives included evaluating the YOLOv11 model's detection performance and assessing the system's usability and reliability through user feedback.
+
+\vspace{1em} 
+
+\section*{METHODOLOGY}
+An Agile methodology was employed to build a vehicular accident detection system comprising a Flutter app, Firebase backend, and a YOLOv11m model. To address mobile hardware limitations, model inference was offloaded to an AWS EC2 instance rather than executing on the local device. The model was trained on 22,465 images of vehicular car crashes (from the Imus Local Government Unit, Kaggle, and Roboflow Universe) using a 70/20/10 train-validate-test split. System evaluation followed ISO 25010 standards through a quantitative study involving 50 active drivers in Imus.
+
+\vspace{1em} 
+
+\section*{KEY RESULTS}
+The YOLOv11 model demonstrated high detection accuracy, achieving a precision of 93\%, a recall of 83\%, a mean Average Precision (mAP@50) of 92.29\%, and a mAP@50--95 of 81.44\%. Additionally, user evaluations revealed high system ratings across Security ($M=4.48$), Usability ($M=4.42$), and Functional Sustainability ($M=4.42$), resulting in an Overall System Quality Score of 4.37.
+
+\vspace{1em} 
+
+\section*{CONCLUSION}
+The developed YOLOv11-based application successfully demonstrates the feasibility of automated, real-time accident detection for local emergency response systems. While the model achieved high baseline accuracy, future work must prioritize optimizing its performance across diverse real-world environmental and lighting conditions.
+
+\end{multicols}
+
+\end{document}
