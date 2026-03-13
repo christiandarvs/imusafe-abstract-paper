@@ -1,0 +1,213 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Evaluating the Effectiveness of YOLOv11-Based Vehicular Accident Detection in the ImuSafe Mobile App
+}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Yuri Anton S. Cariscal}
+\IEEEauthorblockA{\textit{Computer Science Department} \\
+\textit{De La Salle University - Dasmariñas}\\
+Dasmariñas, Philippines \\ cys0775@dlsud.edu.ph}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Christian Elijah DC. Darvin}
+\IEEEauthorblockA{\textit{Computer Science Department} \\
+\textit{De La Salle University - Dasmariñas}\\
+Dasmariñas, Philippines \\ dcd0655@dlsud.edu.ph}
+\and
+\IEEEauthorblockN{3\textsuperscript{rd} Xian Angel B. Palomares}
+\IEEEauthorblockA{\textit{Computer Science Department} \\
+\textit{De La Salle University - Dasmariñas}\\
+Dasmariñas, Philippines \\ pxb0696@edu.ph}
+\and
+\IEEEauthorblockN{4\textsuperscript{th} Rolando B. Barrameda}
+\IEEEauthorblockA{\textit{Computer Science Department} \\
+\textit{De La Salle University - Dasmariñas}\\
+Dasmariñas, Philippines \\ rbbarrameda@edu.ph}
+}
+
+\maketitle
+
+\begin{abstract}
+To address delayed emergency responses to vehicular accidents in Imus City, this study proposes a mobile application integrated with a real-time YOLOv11m-based accident detection system. Current traffic management heavily relies on manual monitoring, resulting in delayed interventions and unoptimized emergency resource deployment. Built utilizing the Agile methodology, the proposed ImuSafe system automatically identifies accident scenarios to help expedite local rescue efforts through a cross-platform mobile interface and a dedicated web dashboard for the Local Government Unit (LGU). The custom accident detection model, trained on heavily augmented local and global datasets, demonstrated robust performance with a 93.05\% precision, 83.98\% recall, and a 92.29\% mAP@50. A quantitative evaluation based on ISO 25010 standards with 50 local respondents yielded a high overall system quality mean score of 4.37 out of 5, indicating strong usability, security, and functional sustainability. Through these findings, this research successfully evaluates the effectiveness of the YOLOv11-based vehicular accident detection system, bridging the gap between computer vision object detection and practical, deployable emergency response architectures.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Vehicular Accident Detection, YOLOv11, Computer Vision, Emergency Response, Object Detection, ISO 25010.
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+According to the World Health Organization (2023), approximately 1.19 million people die each year due to road traffic crashes, making it the leading cause of death for children and young adults aged 5-29 years. Over 90\% of these fatalities occur in low- and middle-income countries. Vulnerable road users, including pedestrians, cyclists, and motorcyclists, account for more than half of all road traffic deaths. The economic impact is severe, with crashes costing most countries about 3\% of their gross domestic product. Speeding, distracted driving, and driving under the influence are major risk factors that significantly increase the likelihood of fatal crashes.
+
+In the 2023 Cavite Ecological Profile statistics, the province of Cavite recorded a total of 7,971 road crash incidents, part of an increasing trend observed over the years. These incidents were categorized into 5,757 cases of Reckless Imprudence Resulting (RIR) in Damage to Property (72.22\%), 2,071 cases of RIR in Physical Injury (25.98\%), and 143 cases of RIR in Homicide (1.79\%). The rise in vehicular accidents may be attributed to the province's rapid urbanization. The highest number of incidents occurred in highly urbanized areas, particularly in the cities of Bacoor and Imus. The city of Imus alone recorded a total of 2,462 road crash incidents.
+
+Current traffic management technologies heavily rely on human perception of captured footage. This takes a substantial amount of effort from human operators and does not support real-time feedback for spontaneous events. Traditional traffic management inefficiencies result from solutions that are frequently centralized and reliant on set signal timings, unable to adapt to the fluctuations in traffic volumes and patterns. Intelligent traffic management and surveillance have been widely implemented using computer vision-based techniques to categorize vehicle types, extract spatiotemporal data, and identify accidents. However, getting these models to function under varying traffic and lighting scenarios remains a critical challenge. 
+
+This study aims to enhance emergency response in Imus City through the development of a mobile application designed to reduce response times for individuals in need. The application, named ImuSafe, enables residents to promptly request help during emergencies, utilizing real-time YOLOv11-based object detection to automatically recognize collision events. It collects the user's precise location and timestamp, facilitating direct communication between emergency dispatchers and individuals on the scene. 
+
+The primary objectives of this study include evaluating the effectiveness of the YOLOv11m architecture in detecting vehicular accidents in real-time, assessing the mobile application's ability to provide accurate vehicular accident notifications to the Imus Local Government Unit (LGU), and analyzing the web dashboard's efficacy in enabling LGU monitors to respond appropriately. Furthermore, the study quantifies user perceptions regarding usability and reliability using the ISO 25010 framework.
+
+\section{Related Work}
+
+Extensive research has been conducted on computer vision methodologies for vehicular accident detection; however, significant limitations hinder real-world deployment. Hammoudeh et al. \cite{b7} reviewed object detection techniques in video streams, pointing out the shortcomings of Convolutional Neural Networks (CNNs) in dynamic environments containing poor lighting, occlusions, and motion blur. Furthermore, their study emphasized the lack of lightweight architectures suited for mobile or edge devices. Similarly, Kabir and Roy \cite{b8} implemented CNN and Long Short-Term Memory (LSTM) networks for accident detection. While their architecture enabled accident prevention, their system lacked compatibility with genuine emergency response services or mobile communication platforms, heavily restricting its suitability for immediate field application.
+
+Recent advancements have shifted towards the YOLO architecture. Dorokar et al. \cite{b3} utilized YOLOv8 for vehicular accident identification from surveillance video streams. Although their system showed promise, its performance under dark lighting and extreme climate conditions remained unvalidated. Furthermore, the absence of real-time emergency response integration procedures left a notable gap for operational settings. Dilek and Dener \cite{b4} evaluated Computer Vision (CV) applications in Intelligent Transportation Systems (ITS) and noted the performance-degrading effects of environmental anomalies. Their survey highlighted that contemporary systems failed to maximize mobile-compatible frameworks for first responders.
+
+Local studies within the Philippines emphasize the growing need for data-driven safety infrastructure. Segun et al. \cite{b15} analyzed road crashes in Metro Manila, highlighting human errors such as speeding and distracted driving as leading causes, coupled with inadequate post-crash infrastructure. Capellan et al. \cite{b2} pointed out that overlapping agency responsibilities and limited infrastructure are primary barriers to road policy execution. Torres and Asor \cite{b19} utilized Naïve Bayes and neural networks to predict road accidents in Calabarzon using historical data. 
+
+Collectively, these studies indicate that while CV and machine learning offer promise in traffic accident detection, real-world deployment remains constrained by environmental variability, high computational requirements, and limited integration with emergency protocols. ImuSafe addresses these exact gaps. Unlike earlier works, ImuSafe proposes a mobile-first, context-aware accident detection paradigm leveraging YOLOv11, integrated into a complete real-time communication framework tailored for the Imus LGU. 
+
+\section{Methodology}
+
+\subsection{System Architecture and Operational Framework}
+The proponents adopted the Agile Software Development Methodology due to its iterative and flexible approach. The system architecture involves three major facets: a cross-platform mobile application built using Flutter, an integrated backend using Google Firebase (Firestore) for real-time database synchronization, and an AWS-hosted FastAPI server managing the custom YOLOv11 object detection model. 
+
+The operational framework relies on a streamlined flow: The user submits a vehicular crash image via the mobile application, which simultaneously fetches GPS coordinates and incident details. The payload is pushed to the AWS server where the YOLOv11 API processes the image. If an accident is identified with a high confidence threshold, or a specific combination of vehicles and individuals indicates a severe collision, an incident report is automatically generated and pushed to the ImuSafe web dashboard for LGU monitoring. If the criteria are not met, the request is marked invalid to mitigate false alarms.
+
+\subsection{YOLOv11 Object Detection Algorithm}
+The core detection algorithm employs YOLOv11m, selected for its optimal balance of computational efficiency and high precision (approximately 20.1 million parameters). YOLOv11 improves upon its predecessors by introducing the C3k2 block, a more compact and efficient version of the CSP bottleneck, and integrating the C2PSA component, a sophisticated spatial attention mechanism within the Neck module.
+
+The model is divided into three parts: Backbone, Neck, and Head. The Backbone extracts multi-scale features utilizing Standard Convolution and Depthwise Separable Convolution. 
+The standard convolution performs element-wise multiplication on input data:
+\begin{equation}
+Y(i,j)=\sum_{m=1}^{M}\sum_{u=1}^{k}\sum_{v=1}^{k}X_{m}(i+u,j+v)\cdot W_{m}(u,v) \label{eq:stdconv}
+\end{equation}
+Depthwise Separable Convolution divides computation to minimize parameters:
+\begin{equation}
+Y_{m}(i,j)=\sum_{u=1}^{k}\sum_{v=1}^{k}X_{m}(i+u,j+v)\cdot W_{m}(u,v) \label{eq:depthconv}
+\end{equation}
+Followed by Pointwise Convolution:
+\begin{equation}
+Z_{n}(i,j)=\sum_{m=1}^{M}Y_{m}(i,j)\cdot P_{m,n} \label{eq:pointconv}
+\end{equation}
+
+The Neck module fuses these multi-scale features:
+\begin{equation}
+F_{fused} = \text{Concat}(F_{high}, \text{Upsample}(F_{low})) \label{eq:fusion}
+\end{equation}
+
+Finally, the Head module generates the bounding box predictions using an anchor-free approach:
+\begin{align}
+b_{x} &= \sigma(\Delta x)+c_{x} \nonumber \\
+b_{y} &= \sigma(\Delta y)+c_{y} \nonumber \\
+b_{w} &= e^{w}\cdot a_{w} \nonumber \\
+b_{h} &= e^{h}\cdot a_{h} \label{eq:bbox}
+\end{align}
+where $\sigma$ is the sigmoid function, $c_x, c_y$ represent the grid cell's top-left coordinates, and $a_w, a_h$ are anchor dimensions. The model computes an objectness score $P_{obj} = \sigma(z)$ and class probabilities via the softmax function to confirm the presence of an accident.
+
+\subsection{Data Augmentation Techniques}
+To prevent overfitting and simulate diverse environmental conditions, rigorous data augmentation was applied. Techniques included Mosaic augmentation, which combines four training images into one to simulate complex scene compositions, and MixUp, which blends two images and their labels to improve robustness against occlusions. 
+
+Furthermore, Hue, Saturation, and Value (HSV) adjustments were integrated: $hsv\_h=0.015$, $hsv\_s=0.7$, and $hsv\_v=0.4$ to simulate daytime, nighttime, and adverse weather conditions. Spatial transformations such as random rotations (5.0 degrees), translations (0.1), scaling (0.5), and horizontal flipping ($P=0.5$) were executed during the 150-epoch training phase using the AdamW optimizer.
+
+\subsection{Severity Class Model}
+To assist emergency dispatchers, a Severity Class Model was integrated to determine the gravity of the accident (minor, moderate, severe). This hybrid approach relies on the YOLOv11m geometry extraction and an Open AI CLIP (Contrastive Language-Image Pretraining) semantic classifier. The geometric model computes a damage area ratio (the proportion of visible damage compared to the total image area) and vehicle count. The CLIP model compares image features against fifteen textual prompts describing varying vehicular damage. A fusion-based decision mechanism reconciles these approaches: if the geometric rule-based model detects a severe collision (e.g., damage area greater than 45\% and more than three vehicles involved), it overrides a lesser CLIP prediction to guarantee a conservative, safety-first alert framework.
+
+\section{Experiments and Results}
+
+\subsection{Dataset Preparation}
+The dataset comprised primary and secondary categories. The primary data included 1,465 annotated images directly supplied by the Imus Local Government Unit, capturing local street views, infrastructure, and common vehicle types (e.g., tricycles, jeepneys, compact sedans). The secondary data supplemented the training with 20,934 pre-annotated collision images sourced from Kaggle and Roboflow Universe to ensure model generalization. The combined dataset was split into 70\% training, 20\% validation, and 10\% testing distributions. 
+
+\subsection{Model Performance}
+The YOLOv11m model was trained for 150 epochs, achieving state-of-the-art results for mobile deployment. The detection metrics emphasize the model's reliability in distinguishing crash scenes from standard traffic anomalies. 
+
+\begin{table}[htbp]
+\caption{YOLOv11 Performance Metrics}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Precision & 0.9305 \\
+\hline
+Recall & 0.8398 \\
+\hline
+mAP@50 & 0.9229 \\
+\hline
+mAP@50-95 & 0.8144 \\
+\hline
+\end{tabular}
+\label{tab:metrics}
+\end{center}
+\end{table}
+
+The precision score of 93.05\% signifies a remarkably low false-positive rate; when ImuSafe triggers an alert, it is correct in over nine out of ten cases. The recall of 83.98\% implies the model effectively captures most true collision events without extensive omission. 
+
+Analysis of the confusion matrix revealed an 88\% true positive rate for actual accidents. Because the model was trained exclusively on a binary classification of accident vs. non-accident (background), instances of unannotated space sometimes trigger false positives (evaluated at a 12\% false negative classification wherein accidents were missed). The Precision-Recall curve demonstrated sustained high precision up to a recall of 0.7, indicating strong confidence. Training loss metrics (box loss, class loss, and DFL) showcased a steady downward trajectory, smoothly plateauing around epoch 140, proving an absence of overfitting.
+
+\subsection{System Evaluation and Usability}
+To evaluate the end-to-end effectiveness of the ImuSafe application, a quantitative study was conducted involving 50 active drivers and residents of Imus, Cavite, aged 18 to 50, alongside LGU emergency responders. The evaluation utilized the ISO 25010 Software Quality Standards, graded on a 5-point Likert scale.
+
+\begin{table}[htbp]
+\caption{Overall System Evaluation based on ISO 25010}
+\begin{center}
+\begin{tabular}{|l|c|c|l|}
+\hline
+\textbf{Category} & \textbf{Mean} & \textbf{SD} & \textbf{Interpretation} \\
+\hline
+Functional Suitability & 4.42 & 0.617 & High \\
+\hline
+Performance Efficiency & 4.38 & 0.635 & High \\
+\hline
+Usability & 4.42 & 0.702 & High \\
+\hline
+Reliability & 4.17 & 0.678 & High \\
+\hline
+Security & 4.48 & 0.639 & High \\
+\hline
+Portability & 4.30 & 0.707 & High \\
+\hline
+\textbf{Overall System Quality} & \textbf{4.37} & \textbf{0.591} & \textbf{High} \\
+\hline
+\end{tabular}
+\label{tab:evaluation}
+\end{center}
+\end{table}
+
+The system demonstrated a high overall quality with an aggregate mean of 4.37. Respondents rated Security highest (4.48), confirming trust in the application's handling of GPS and photographic data exclusively for authorized LGU personnel. Usability (4.42) highlighted the simplicity of the app's interface for emergency scenarios, where cognitive load must be minimized. While Reliability scored highly (4.17), specific feedback regarding daytime/nighttime photo variations indicated a need for continued environmental optimization within the model.
+
+\section{Conclusion and Future Work}
+This study developed ImuSafe, a YOLOv11-based vehicular accident detection app and dashboard designed to enhance Imus City's emergency response. Aligned with CITMU and CDRRMO protocols, the system enables automated, real-time LGU reporting. The model, trained on 22,399 images, demonstrated robust accuracy, achieving 93.05$\%$ precision, 83.98$\%$ recall, and a 92.29$\%$ mAP@50. User evaluations confirmed its practical feasibility, rating its overall reliability highly (M = 4.17).
+
+However, slightly lower scores for the automated detection feature (M = 4.06) and performance under varied lighting (M = 3.84) highlight areas for refinement. Future work should enrich the dataset with nocturnal and adverse weather imagery to optimize environmental adaptability. Implementing these enhancements will improve edge-case reliability, allowing ImuSafe to serve as an adaptable blueprint for other LGUs.
+
+\section*{Acknowledgment}
+The authors express sincere gratitude to Prof. Rolando B. Barrameda for his continuous guidance. We also thank the Imus Local Government Unit, specifically the City of Imus Traffic Management Unit (CITMU) and the City Disaster Risk Reduction and Management Office (CDRRMO), for their cooperation, data provision, and evaluation of the system. Special thanks to the SM Investments Cloud Department for sharing industry deployment practices. 
+
+\begin{thebibliography}{00}
+\bibitem{b1} M. I. B. Ahmed, R. Zaghdoud, M. S. Ahmed, et al., ``A Real-Time Computer Vision Based Approach to Detection and Classification of Traffic Incidents,'' Big Data and Cognitive Computing, vol. 7, no. 1, p. 22, 2023.
+\bibitem{b2} A. M. C. Capellan, P. A. B. A. Ilas, K. A. R. Reyes, and R. R. Cabauatan, ``The Challenges in the Implementation of Road Policies in Metro Manila,'' International Journal of Research in Engineering, Science and Management, vol. 5, no. 1, pp. 149--161, 2022.
+\bibitem{b3} M. A. Darokar, M. A. Talware, M. A. Jadhav, et al., ``Accident Detection System Using YOLOv8 and CNN Algorithms,'' International Research Journal of Modernization in Engineering Technology and Science, vol. 5, no. 12, 2023.
+\bibitem{b4} E. Dilek and M. Dener, ``Computer Vision Applications in Intelligent Transportation Systems: A Survey,'' Sensors, vol. 23, no. 6, p. 2938, 2023.
+\bibitem{b5} N. Dontuboyina, ``Evaluation of Computer Vision Models on Car Crash Detection,'' NHSJS, 2024. [Online]. Available: https://nhsjs.com/
+\bibitem{b6} C. Genitha, S. A. Danny, A. H. Ajibah, S. Aravint, and A. A. V. Sweety, ``AI based Real-Time Traffic Signal Control System using Machine Learning,'' in 2023 4th International Conference on Electronics and Sustainable Communication Systems (ICESC), pp. 1613--1618, 2023.
+\bibitem{b7} M. A. A. Hammoudeh, M. Alsaykhan, R. Alsalameh, and N. Althwaibi, ``Computer Vision: A Review of Detecting Objects in Videos – Challenges and Techniques,'' International Journal of Online and Biomedical Engineering (iJOE), vol. 18, no. 1, pp. 15--27, 2022.
+\bibitem{b8} M. F. Kabir and S. Roy, ``Accident Prevention System Using Deep Learning,'' in Proc. Vehicular Safety, 2022.
+\bibitem{b9} M. Haris, M. A. Moin, F. A. Rehman, and M. Farhan, ``Vehicle crash prediction using Vision,'' in Electrical and Computer Engineering, 2021.
+\bibitem{b10} C. D. Juan, J. R. Bat-Og, K. Wan, and M. Cordel II, ``Investigating visual attention-based traffic accident detection model,'' The Philippine Journal of Science, vol. 150, no. 2, 2021.
+\bibitem{b11} K. K. Jyothi, G. Kalyani, and G. J. Lakshmi, ``Computer Vision Based Accident Detection and Alert System,'' International Journal of Science \& Engineering Development Research, vol. 8, no. 6, pp. 697--703, 2023.
+\bibitem{b12} R. Koch, ``AI in traffic management: Artificial intelligence solves traffic control issues,'' Clickworker, 2022.
+\bibitem{b13} V. R. Kompalli, V. M. R. Somula, T. K. Matta, and S. Madala, ``Real Time Object Detection using Deep Learning,'' International Journal of Innovative Science and Research Technology (IJISRT), vol. 8, no. 5, pp. 1638--1643, 2023.
+\bibitem{b14} J. L. Lu, T. J. Herbosa, and S. F. Lu, ``Analysis of Transport and Vehicular Crash Cases Using the Online National Electronic Injury Surveillance System (ONEISS) from 2010 to 2019,'' Acta Medica Philippina, vol. 56, no. 1, 2022.
+\bibitem{b15} W. M. Segun, F. V. Dela Cruz, N. S. Golla, and E. B. Villa, ``Factors and Challenges in Road Crash Incidents: Basis for Enhanced Interventions,'' International Journal of Multidisciplinary: Applied Business and Education Research, vol. 5, no. 7, pp. 2787--2820, 2024.
+\bibitem{b16} J. Singh and S. Jain, ``Computer Vision Techniques for Vehicular Accident Detection: A Brief Review,'' International Journal of Innovative Science and Research Technology (IJISRT), vol. 7, no. 9, pp. 247--253, 2022.
+\bibitem{b17} T. Tamagusko, M. G. Correia, M. A. Huynh, and A. Ferreira, ``Deep learning applied to road accident detection with transfer learning and synthetic images,'' Transportation Research Procedia, vol. 64, pp. 90--97, 2022.
+\bibitem{b18} J. Torres, ``YOLOv8 Architecture; Deep Dive into its Architecture,'' YOLOv8, Jan 2025.
+\bibitem{b19} K. Torres and J. Asor, ``Machine learning approach on road accidents analysis in Calabarzon, Philippines: an input to road safety management,'' Indonesian Journal of Electrical Engineering and Computer Science, vol. 24, no. 2, pp. 993--1000, 2021.
+\bibitem{b20} M. Yaseen, ``What is YOLOv8: An In-Depth Exploration of the Internal Features of the Next-Generation Object Detector,'' arXiv preprint, arXiv:2408.15857, 2024.
+\end{thebibliography}
+
+\end{document}
